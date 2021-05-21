@@ -7,32 +7,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.rafaelmiranda.bookstore.domain.Categoria;
+import com.rafaelmiranda.bookstore.domain.Livro;
 import com.rafaelmiranda.bookstore.exception.ObjectNotFoundException;
-import com.rafaelmiranda.bookstore.repository.CategoriaRepository;
+import com.rafaelmiranda.bookstore.repository.LivroRepository;
 
 @Service
-public class CategoriaService {
+public class LivroService {
 
 	@Autowired
-	private CategoriaRepository repository;
+	private LivroRepository repository;
 
-	public Categoria findById(Integer id) throws ObjectNotFoundException {
-		Optional<Categoria> obj = repository.findById(id);
+	public Livro findById(Integer id) throws ObjectNotFoundException {
+		Optional<Livro> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado! Id: " + id + " Tipo " + Categoria.class.getName()));
+				"Objeto não encontrado! Id: " + id + " Tipo " + Livro.class.getName()));
 	}
 
-	public List<Categoria> findAll() {
+	public List<Livro> findAll() {
 		return repository.findAll();
 	}
 
-	public Categoria create(Categoria obj) {
+	public Livro create(Livro obj) {
 		obj.setId(null);
 		return repository.save(obj);
 	}
 
-	public Categoria update(Categoria obj) {
+	public Livro update(Livro obj) {
 		return repository.save(obj);
 	}
 
@@ -41,7 +41,7 @@ public class CategoriaService {
 		try {
 			repository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new com.rafaelmiranda.bookstore.exception.DataIntegrityViolationException("Categoria não pode ser deletada! Possui livros associados");
+			throw new com.rafaelmiranda.bookstore.exception.DataIntegrityViolationException("Livro não pode ser deletada! Possui livros associados");
 		}
 	}
 }
