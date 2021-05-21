@@ -11,8 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+@Data @NoArgsConstructor
 @Entity
 public class Categoria implements Serializable{
 	
@@ -27,10 +28,6 @@ public class Categoria implements Serializable{
 	
 	@OneToMany(mappedBy = "categoria")
 	private List<Livro> livros = new ArrayList<Livro>();
-
-	public Categoria() {
-		super();
-	}
 
 	public Categoria(Integer id, String nome, String descricao) {
 		super();
