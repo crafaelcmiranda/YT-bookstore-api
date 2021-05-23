@@ -4,8 +4,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +24,35 @@ import com.rafaelmiranda.bookstore.service.CategoriaService;
 
 import javassist.tools.rmi.ObjectNotFoundException;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/categorias")//localhost:8080/categorias/1
 public class CategoriaResource {
 	
 	@Autowired
 	private CategoriaService service;
+	
+	
+	@PostMapping
+	public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria obj){
+		obj = service.create(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
+	
+	@PostMapping(value = "/{id}")
+	public ResponseEntity<Categoria> update(@PathVariable Integer id, @Valid @RequestBody Categoria obj){
+		//Categoria objcategoria = service.findById(id);
+		//service.
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Categoria> delete(@PathVariable Integer id){
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> findById(@PathVariable Integer id) throws ObjectNotFoundException{
@@ -41,25 +67,6 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(categoriaDtos);
 	}
 	
-	@PostMapping
-	public ResponseEntity<Categoria> create(@RequestBody Categoria obj){
-		obj = service.create(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).build();
-	}
 	
-	@PostMapping(value = "/{id}")
-	public ResponseEntity<Categoria> update(@PathVariable Integer id,@RequestBody Categoria obj){
-		Categoria objcategoria = service.findById(id);
-		//service.
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).build();
-	}
-
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Categoria> update(@PathVariable Integer id){
-		service.delete(id);
-		return ResponseEntity.noContent().build();
-	}
 	
 }

@@ -17,6 +17,9 @@ public class LivroService {
 	@Autowired
 	private LivroRepository repository;
 
+	@Autowired
+	private CategoriaService categoriaService;
+
 	public Livro findById(Integer id) throws ObjectNotFoundException {
 		Optional<Livro> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -28,6 +31,7 @@ public class LivroService {
 	}
 
 	public Livro create(Livro obj) {
+		categoriaService.findById(obj.getCategoria().getId());
 		obj.setId(null);
 		return repository.save(obj);
 	}
@@ -43,5 +47,10 @@ public class LivroService {
 		} catch (DataIntegrityViolationException e) {
 			throw new com.rafaelmiranda.bookstore.exception.DataIntegrityViolationException("Livro não pode ser deletada! Possui livros associados");
 		}
+	}
+
+	public List<Livro> findAllByCategoria(Integer idCat) {
+		categoriaService.findById(idCat);
+		return repository.findAAllByCategoria(idCat);
 	}
 }
